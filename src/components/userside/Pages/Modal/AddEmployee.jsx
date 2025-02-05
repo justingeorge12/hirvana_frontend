@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import noProfile from '../../../../assets/noProfile.jpg'
 import toast from 'react-hot-toast'
 import api from '../../../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 
 function AddEmployee({onClose, employee, fetchEmployees}) {
 
   const isEditMode = Boolean(employee);
-  
-
-  console.log(isEditMode, '----------------------------------')
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: '', email: '', phone: '', age: '', gender: '',
@@ -251,7 +250,6 @@ function AddEmployee({onClose, employee, fetchEmployees}) {
       let res; 
       if (isEditMode) {
 
-        console.log(employee.regid, '--------------------------------------------------------------------')
         res = await api.put('update_empl/', {"regid":employee.regid, ...formData})
       }
       else{
@@ -263,7 +261,7 @@ function AddEmployee({onClose, employee, fetchEmployees}) {
       if (res.status === 200) {
         toast.success(isEditMode ? 'Employee updated successfully' : 'New employee added')
         onClose()
-        {!isEditMode ? fetchEmployees(): fetchEmployees()}
+        {!isEditMode ? fetchEmployees(): navigate('/employees')}
       }
     }
     catch(err) {
@@ -271,6 +269,9 @@ function AddEmployee({onClose, employee, fetchEmployees}) {
       if (err.status === 409) {
         toast.error('the email is already exists')
       } 
+      else{
+        toast.error('there is some issue, try again after some time')
+      }
     }
   }
   

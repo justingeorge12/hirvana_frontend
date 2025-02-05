@@ -4,21 +4,25 @@ import cycle from '../../../assets/cycle.png'
 import AddEmployee from "./Modal/AddEmployee";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 function Employees() {
 
     const navigate = useNavigate()
     const [employList, setEmployList] = useState([])
     const [mangeModl, setManageModal] = useState(false)
+    const [pagination, setPagination] = useState({ next: null, previous: null });
 
-    const fetchEmployees = async () => {
+    const fetchEmployees = async (url = 'get_empl/') => {
         try{
-            const res = await api.get('get_empl/')
+            const res = await api.get(url)
             console.log(res)
-            setEmployList(res.data.employees)
+            setEmployList(res.data.results.employees)
+            setPagination({ next: res.data.next, previous: res.data.previous});
         }
         catch(err) {
             console.log(err)
+            toast.error('loading issue, try again after some time')
         }
     }
 
@@ -38,8 +42,8 @@ function Employees() {
                     </div>
                     <div className="mt-2 flex justify-end">
                         <div className="mr-4 text-3xl">
-                            <button className="mr-4">⇦</button>
-                            <button>⇨</button>
+                            <button onClick={() => pagination.previous && fetchEmployees(pagination.previous)} disabled={!pagination.previous} className={`mr-4 ${!pagination.previous ? 'opacity-50 cursor-not-allowed' : ''}`} > ⇦ </button>
+                            <button onClick={() => pagination.next && fetchEmployees(pagination.next)} disabled={!pagination.next} className={`${!pagination.next ? 'opacity-50 cursor-not-allowed' : ''}`} > ⇨ </button>
                         </div>
                     </div>
                     <div className="border bg-lime-50  rounded-xl relative overflow-x-auto custom-scrollbar">
