@@ -43,7 +43,7 @@ function SingleEmployeeView() {
                 <div className="m-4">
                     <div className="flex ">
                         <div className="text-center">
-                            <img src={noProfile} alt="" className=" mx-auto h-16 rounded-md" />
+                            {/* <img src={noProfile} alt="" className=" mx-auto h-16 rounded-md" /> */}
                             <h1 className="text-3xl font-mono">{emploData.name}</h1>
                         </div>
                     </div>

@@ -24,6 +24,7 @@ function Register() {
         }
         catch (error) {
             console.log(error)
+            toast.error('there is some error please try again after some time')
         }
 
         console.log(data)

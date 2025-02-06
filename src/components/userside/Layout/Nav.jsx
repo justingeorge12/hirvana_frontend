@@ -1,9 +1,34 @@
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import api from "../../../services/api";
+import { logout } from "../../../redux/authSlice";
 
 function Nav() {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     
+    const handleLogout = async () => {
+        try{
+          const token = localStorage.getItem('refresh')
+        //   const res = await api.post('logout', {token})
+          localStorage.clear()
+          dispatch(logout())
+          delete api.defaults.headers.common["Authorization"];
+          navigate('/login')
+    
+        }
+        catch (err) {
+          console.log(err)
+          localStorage.clear()
+          dispatch(logout())
+          delete api.defaults.headers.common["Authorization"];
+          navigate('/login')
+        }
+      }
+
+      
+
     return (
         <div className="fixed top-0 left-0 right-0 h-20 backdrop-blur-md bg-white/30 z-50">
             <div className="flex justify-center items-center h-full">
